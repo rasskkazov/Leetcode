@@ -9,20 +9,23 @@ class TreeNode {
   }
 }
 
-function diameterOfBinaryTree(root: TreeNode | null): number {
-  let max = 0;
+function isBalanced(root: TreeNode | null): boolean {
+  let res = true;
 
   function dfs(root: TreeNode | null) {
+    if (!res) return 0;
     if (!root) return 0;
     if (!root.left && !root.right) return 1;
 
     const left = dfs(root.left);
     const right = dfs(root.right);
 
-    max = Math.max(left + right, max);
+    if (Math.abs(left - right) > 1) res = false;
 
     return Math.max(left, right) + 1;
   }
+
   dfs(root);
-  return max;
+
+  return res;
 }
