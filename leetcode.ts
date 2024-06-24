@@ -9,8 +9,20 @@ class TreeNode {
   }
 }
 
-function maxDepth(root: TreeNode | null): number {
-  if (!root) return 0;
-  if (root.left === null && root.right === null) return 1;
-  return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+function diameterOfBinaryTree(root: TreeNode | null): number {
+  let max = 0;
+
+  function dfs(root: TreeNode | null) {
+    if (!root) return 0;
+    if (!root.left && !root.right) return 1;
+
+    const left = dfs(root.left);
+    const right = dfs(root.right);
+
+    max = Math.max(left + right, max);
+
+    return Math.max(left, right) + 1;
+  }
+  dfs(root);
+  return max;
 }
