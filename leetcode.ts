@@ -9,23 +9,18 @@ class TreeNode {
   }
 }
 
-function isBalanced(root: TreeNode | null): boolean {
-  let res = true;
+function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
+  if (!p && !q) return true;
+  if (!p && q) return false;
+  if (p && !q) return false;
 
-  function dfs(root: TreeNode | null) {
-    if (!res) return 0;
-    if (!root) return 0;
-    if (!root.left && !root.right) return 1;
+  if (p && q) {
+    if (p.val !== q.val) return false;
 
-    const left = dfs(root.left);
-    const right = dfs(root.right);
+    const l = isSameTree(p.left, q.left);
+    const r = isSameTree(p.right, q.right);
 
-    if (Math.abs(left - right) > 1) res = false;
-
-    return Math.max(left, right) + 1;
+    return l && r;
   }
-
-  dfs(root);
-
-  return res;
+  return false;
 }
