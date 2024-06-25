@@ -24,3 +24,17 @@ function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
   }
   return false;
 }
+
+function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
+  if (!root) return false;
+  if (!subRoot) return false;
+
+  if (root.val === subRoot.val) {
+    if (isSameTree(root, subRoot)) return true;
+  }
+
+  const l = isSubtree(root.left, subRoot);
+  const r = isSubtree(root.right, subRoot);
+
+  return l || r;
+}
