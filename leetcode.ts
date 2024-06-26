@@ -9,32 +9,38 @@ class TreeNode {
   }
 }
 
-function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
-  if (!p && !q) return true;
-  if (!p && q) return false;
-  if (p && !q) return false;
+function lowestCommonAncestor(
+  root: TreeNode | null,
+  p: TreeNode | null,
+  q: TreeNode | null
+): TreeNode | null {
+  if (!root) return null;
 
-  if (p && q) {
-    if (p.val !== q.val) return false;
-
-    const l = isSameTree(p.left, q.left);
-    const r = isSameTree(p.right, q.right);
-
-    return l && r;
+  if (!p || !q) return null;
+  if (p.val > q.val) {
+    const temp = q;
+    q = p;
+    p = temp;
   }
-  return false;
-}
+  let left: TreeNode | null = null;
+  let right: TreeNode | null = null;
 
-function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
-  if (!root) return false;
-  if (!subRoot) return false;
-
-  if (root.val === subRoot.val) {
-    if (isSameTree(root, subRoot)) return true;
+  if (root.val === p.val) {
+    left = root;
+  } else if (root.val === q.val) {
+    right = root;
+  } else {
+    left = lowestCommonAncestor(root.left, p, q);
+    right = lowestCommonAncestor(root.right, p, q);
   }
 
-  const l = isSubtree(root.left, subRoot);
-  const r = isSubtree(root.right, subRoot);
+  if (left && !right) {
+    right = lowestCommonAncestor(left.right, p, q);
+    if (right) return left;
+  } else if (!left && right) {
+    left = lowestCommonAncestor(right.left, p, q);
+    if (left) return right;
+  }
 
-  return l || r;
+  return left && right ? root : left || right;
 }
