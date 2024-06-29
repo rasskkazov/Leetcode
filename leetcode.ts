@@ -9,38 +9,34 @@ class TreeNode {
   }
 }
 
-function lowestCommonAncestor(
-  root: TreeNode | null,
-  p: TreeNode | null,
-  q: TreeNode | null
-): TreeNode | null {
-  if (!root) return null;
+function levelOrder(root: TreeNode | null): number[][] {
+  let res: number[][] = [];
+  let treeLevel = 0;
 
-  if (!p || !q) return null;
-  if (p.val > q.val) {
-    const temp = q;
-    q = p;
-    p = temp;
-  }
-  let left: TreeNode | null = null;
-  let right: TreeNode | null = null;
+  function traverse(root: TreeNode | null) {
+    if (!root) {
+      treeLevel--;
+      return 0;
+    }
 
-  if (root.val === p.val) {
-    left = root;
-  } else if (root.val === q.val) {
-    right = root;
-  } else {
-    left = lowestCommonAncestor(root.left, p, q);
-    right = lowestCommonAncestor(root.right, p, q);
-  }
+    if (!(res[treeLevel] instanceof Array)) {
+      res.push([]);
+    }
+    res[treeLevel].push(root.val);
 
-  if (left && !right) {
-    right = lowestCommonAncestor(left.right, p, q);
-    if (right) return left;
-  } else if (!left && right) {
-    left = lowestCommonAncestor(right.left, p, q);
-    if (left) return right;
+    if (!root.left && !root.right) {
+      treeLevel--;
+      return 0;
+    }
+
+    treeLevel++;
+    traverse(root.left);
+    treeLevel++;
+    traverse(root.right);
+    treeLevel--;
+    return 0;
   }
 
-  return left && right ? root : left || right;
+  traverse(root);
+  return res;
 }
