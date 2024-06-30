@@ -9,31 +9,34 @@ class TreeNode {
   }
 }
 
-function levelOrder(root: TreeNode | null): number[][] {
-  let res: number[][] = [];
-  let treeLevel = 0;
+function rightSideView(root: TreeNode | null): number[] {
+  let res: number[] = [];
+
+  const coveredLevels = new Set<number>();
+  let level = 0;
 
   function traverse(root: TreeNode | null) {
     if (!root) {
-      treeLevel--;
+      level--;
       return 0;
     }
 
-    if (!(res[treeLevel] instanceof Array)) {
-      res.push([]);
+    if (!coveredLevels.has(level)) {
+      coveredLevels.add(level);
+      res.push(root.val);
     }
-    res[treeLevel].push(root.val);
 
     if (!root.left && !root.right) {
-      treeLevel--;
+      level--;
       return 0;
     }
 
-    treeLevel++;
-    traverse(root.left);
-    treeLevel++;
+    level++;
     traverse(root.right);
-    treeLevel--;
+    level++;
+    traverse(root.left);
+
+    level--;
     return 0;
   }
 
