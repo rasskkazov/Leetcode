@@ -9,37 +9,25 @@ class TreeNode {
   }
 }
 
-function rightSideView(root: TreeNode | null): number[] {
-  let res: number[] = [];
+function goodNodes(root: TreeNode | null): number {
+  let res = 0;
+  let curPath: number[] = [];
 
-  const coveredLevels = new Set<number>();
-  let level = 0;
+  function bypass(root: TreeNode | null) {
+    if (!root) return 0;
 
-  function traverse(root: TreeNode | null) {
-    if (!root) {
-      level--;
-      return 0;
-    }
-
-    if (!coveredLevels.has(level)) {
-      coveredLevels.add(level);
-      res.push(root.val);
-    }
-
+    curPath.push(root.val);
+    if (Math.max(...curPath) === root.val) res++;
     if (!root.left && !root.right) {
-      level--;
+      curPath.pop();
       return 0;
     }
 
-    level++;
-    traverse(root.right);
-    level++;
-    traverse(root.left);
-
-    level--;
+    bypass(root.left);
+    bypass(root.right);
+    curPath.pop();
     return 0;
   }
-
-  traverse(root);
+  bypass(root);
   return res;
 }
